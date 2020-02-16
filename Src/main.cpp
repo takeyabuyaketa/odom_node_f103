@@ -44,9 +44,7 @@
 #include "stm32f1xx_hal.h"
 #include "can.hpp"
 #include "led.h"
-#include "slcan.h"
 #include <array>
-#include "SerialClass.hpp"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

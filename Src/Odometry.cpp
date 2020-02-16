@@ -142,7 +142,7 @@ void Odometry::ReadEncoder(void) {
 }
 
 void Odometry::ReadAccGyro(void) {
-	static constexpr int32_t ang_movband = 250;
+	static constexpr int32_t ang_movband = 100;
 	static constexpr float ang_w = 0.01f; //追従の強さ
 
 //	static uint32_t lasttime=0;

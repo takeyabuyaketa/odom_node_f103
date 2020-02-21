@@ -201,9 +201,9 @@ int main(void) {
 	while (1) {
 		if (HAL_GetTick() - last_time >= CAN_duration) {
 			odom->GetPose(&X, &Y, &Yaw);
-			can_pack(tx_payload_x, (float) X);
-			can_pack(tx_payload_y, (float) Y);
-			can_pack(tx_payload_yaw, (float) Yaw);
+			can_pack(tx_payload_x, (float)odom->movavg[2]);
+			can_pack(tx_payload_y, (float)odom->raw[2]);
+			can_pack(tx_payload_yaw, Yaw);
 
 			can_tx(&tx_header_x, tx_payload_x); //can pack 通して tx_payload
 //			HAL_Delay(1);
@@ -261,15 +261,15 @@ void CANtxinit(void) {
 	tx_header_x.RTR = CAN_RTR_DATA;
 	tx_header_x.IDE = CAN_ID_STD;
 	tx_header_x.StdId = 0x205; //ID決める
-	tx_header_x.DLC = 4;
+	tx_header_x.DLC = sizeof(float);
 	tx_header_y.RTR = CAN_RTR_DATA;
 	tx_header_y.IDE = CAN_ID_STD;
 	tx_header_y.StdId = 0x206;
-	tx_header_y.DLC = 4;
+	tx_header_y.DLC = sizeof(float);
 	tx_header_yaw.RTR = CAN_RTR_DATA;
 	tx_header_yaw.IDE = CAN_ID_STD;
 	tx_header_yaw.StdId = 0x207;
-	tx_header_yaw.DLC = 4;
+	tx_header_yaw.DLC = sizeof(float);
 }
 
 /* USER CODE END 3 */

@@ -201,8 +201,8 @@ int main(void) {
 	while (1) {
 		if (HAL_GetTick() - last_time >= CAN_duration) {
 			odom->GetPose(&X, &Y, &Yaw);
-			can_pack(tx_payload_x, (float)odom->movavg[2]);
-			can_pack(tx_payload_y, (float)odom->raw[2]);
+			can_pack(tx_payload_x, X);
+			can_pack(tx_payload_y, Y);
 			can_pack(tx_payload_yaw, Yaw);
 
 			can_tx(&tx_header_x, tx_payload_x); //can pack 通して tx_payload

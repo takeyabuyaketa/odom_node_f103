@@ -107,12 +107,12 @@ bool Odometry::InitGyro(void) {
 
 		if (stdev[0] < 700 && stdev[1] < 700 && stdev[2] < 700 && stdev[3] < 700
 				&& stdev[4] < 700 && stdev[5] < 700) {
-			movavg[0] = (int32_t) avg[0];
-			movavg[1] = (int32_t) avg[1];
-			movavg[2] = (int32_t) avg[2];
-			movavg[3] = (int32_t) avg[3];
-			movavg[4] = (int32_t) avg[4];
-			movavg[5] = (int32_t) avg[5];
+			movavg[0] = (int32_t) roundf(avg[0]);
+			movavg[1] = (int32_t) roundf(avg[1]);
+			movavg[2] = (int32_t) roundf(avg[2]);
+			movavg[3] = (int32_t) roundf(avg[3]);
+			movavg[4] = (int32_t) roundf(avg[4]);
+			movavg[5] = (int32_t) roundf(avg[5]);
 
 			MDGF.begin(this->SamplingFrequency);
 
@@ -199,7 +199,7 @@ void Odometry::ReadAccGyro(void) {
 		movavg[i] = (int) (roundf(( movavg[i] * (1.0 - acc_w)) + ( raw[i] * acc_w)));
 	}
 
-	MDGF.updateIMU(data[0], data[1], data[2], movavg[3], movavg[4], movavg[5]);
+	MDGF.updateIMU(data[0], data[1], data[2], (float)movavg[3], (float)movavg[4], (float)movavg[5]);
 //	MDGF.updateIMU(data[0], data[1], data[2], 0, 0, 1);
 //	dt = HAL_GetTick()-lasttime;
 //	lasttime=HAL_GetTick();

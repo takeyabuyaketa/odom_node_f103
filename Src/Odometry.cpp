@@ -19,6 +19,8 @@ Odometry::Odometry(void) {
 	this->x = 0.0f;
 	this->y = 0.0f;
 	this->yaw = 0.0f;
+	this->X = mergin_X;
+	this->Y = mergin_Y;
 
 	//this->mpu9250 = new MPU9250(SPI_MPU9250, GPIOC, GPIO_PIN_0);
 	this->mpu9250 = new MPU9250(SPI_MPU9250, GPIO_MPU9250, PIN_MPU9250);
@@ -125,20 +127,23 @@ bool Odometry::InitGyro(void) {
 }
 
 void Odometry::ReadEncoder(void) {
-	volatile int16_t _p1 = (-1)*static_cast<int16_t>(TIM3->CNT);
+	volatile float _p1 = (-1)*static_cast<int16_t>(TIM3->CNT);
 	TIM3->CNT = 0;
 
-	volatile int16_t _p2 = (-1)*static_cast<int16_t>(TIM4->CNT);
+	volatile float _p2 = (-1)*static_cast<int16_t>(TIM4->CNT);
 	TIM4->CNT = 0;
 
 	// just a simple rotation matrix
 	// translate encoder rates to velocity on x-y plane
-	float _yaw = yaw; //- ((float) M_PI / 4.0f); //いじるとしたらこの辺　ジャイロの付け方に依る
+	float _yaw = yaw; //- ((float) M_PI / 4.0f); //オドメトリの座標系がロボットの座標系に対してどれだけ傾いているか
 	float _cos = cosf(_yaw);
 	float _sin = sinf(_yaw);
 
-	x += ((_p1 * _cos) - (_p2 * _sin)) * MPerPulse;
-	y += ((_p1 * _sin) + (_p2 * _cos)) * MPerPulse;
+	X += ((_p1 * _cos) - (_p2 * _sin)) * MPerPulse;
+	Y += ((_p1 * _sin) + (_p2 * _cos)) * MPerPulse;
+
+	x = (-mergin_X * _cos) - (-mergin_Y * _sin) + X;
+	y = (-mergin_X * _sin) + (-mergin_Y * _cos) + Y;
 }
 
 void Odometry::ReadAccGyro(void) {

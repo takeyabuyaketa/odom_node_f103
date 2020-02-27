@@ -20,6 +20,12 @@ private:
 	float y;
 	float yaw;
 
+	float X; //オドメトリ座標系　大文字小文字逆な気もするけど
+	float Y;
+
+	float mergin_X = 0; //ロボットの原点から見たオドメトリ原点の座標
+	float mergin_Y = 0; //ロボットの正面をX，左をYと想定 正直マイコンでやる意味はあるのか
+
 	MPU9250 *mpu9250 = nullptr;
 
 	// diameter of wheels in metre
@@ -44,7 +50,7 @@ public:
 
 	bool Initialize(void);
 
-	int raw[6]; //後で戻す
+	int raw[6]; //for debug 後で戻す
 	int movavg[6];
 	int biased[6];
 

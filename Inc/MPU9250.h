@@ -159,7 +159,7 @@
 
 #define READ_FLAG   0x80
 
-#define GYRO_FS_SEL 0x02
+#define GYRO_FS_SEL 0x01
 
 #if GYRO_FS_SEL == 0x00
 
@@ -187,7 +187,7 @@ static constexpr float GyroSensitivityScaleFactor = 32.8f;
 
 #endif
 
-#define ACCEL_FS_SEL 0x03
+#define ACCEL_FS_SEL 0x00
 
 #if ACCEL_FS_SEL == 0x00
 

@@ -1,22 +1,22 @@
 /*
- * MPU9250.cpp
+ * ICM20602.cpp
  *
  *  Created on: Sep 17, 2017
  *      Author: yusaku
  */
 
-#include "MPU9250.h"
+#include <ICM20602.h>
 //#include "Global.h"
 //#include "Timer.h"
 //#include <exception>
 
-MPU9250::MPU9250(SPI_TypeDef * const spi, GPIO_TypeDef * const ss_gpio, const uint32_t ss_pin)
+ICM20602::ICM20602(SPI_TypeDef * const spi, GPIO_TypeDef * const ss_gpio, const uint32_t ss_pin)
 	: _spi(spi), _ss_gpio(ss_gpio), _ss_pin(ss_pin)
 {
 	this->_gyroZ_bias = 0.0;
 }
 
-uint8_t MPU9250::_spiWrite(const uint8_t data) const
+uint8_t ICM20602::_spiWrite(const uint8_t data) const
 {
 	while(!(_spi->SR & SPI_SR_TXE)) ;
 	_spi->DR = data;
@@ -24,17 +24,17 @@ uint8_t MPU9250::_spiWrite(const uint8_t data) const
 	return (uint8_t)_spi->DR;
 }
 
-void MPU9250::_spiChipSelect(void) const
+void ICM20602::_spiChipSelect(void) const
 {
 	_ss_gpio->BSRR = (_ss_pin << 16);
 }
 
-void MPU9250::_spiChipDeselect(void) const
+void ICM20602::_spiChipDeselect(void) const
 {
 	_ss_gpio->BSRR = _ss_pin;
 }
 
-uint8_t MPU9250::WriteByte(const uint8_t addr, const uint8_t data) const
+uint8_t ICM20602::WriteByte(const uint8_t addr, const uint8_t data) const
 {
 	volatile uint8_t result = 0x00;
 
@@ -49,7 +49,7 @@ uint8_t MPU9250::WriteByte(const uint8_t addr, const uint8_t data) const
 	return result;
 }
 
-uint16_t MPU9250::WriteWord(const uint8_t addr, const uint16_t data) const
+uint16_t ICM20602::WriteWord(const uint8_t addr, const uint16_t data) const
 {
 	volatile uint16_t result = 0x00;
 
@@ -66,7 +66,7 @@ uint16_t MPU9250::WriteWord(const uint8_t addr, const uint16_t data) const
 	return result;
 }
 
-void MPU9250::ReadBurst(const uint8_t addr, const uint16_t cnt, uint8_t * const dest) const
+void ICM20602::ReadBurst(const uint8_t addr, const uint16_t cnt, uint8_t * const dest) const
 {
 	if(dest == nullptr)
 	{
@@ -81,14 +81,14 @@ void MPU9250::ReadBurst(const uint8_t addr, const uint16_t cnt, uint8_t * const 
 	}
 }
 
-//float MPU9250::ReadGyroZ(void)
+//float ICM20602::ReadGyroZ(void)
 //{
 //	float raw = (int16_t)WriteWord(READ_FLAG | MPUREG_GYRO_ZOUT_H, 0x0000);
 //	return (raw / GyroSensitivityScaleFactor) - this->_gyroZ_bias;
 //}
 
 /*
-void MPU9250::CalibrateGyroZ(void)
+void ICM20602::CalibrateGyroZ(void)
 {
 	static constexpr int NumOfTrial = 10;
 	float bias_sum = 0.0;
@@ -178,13 +178,13 @@ void MPU9250::CalibrateGyroZ(void)
 }
 */
 
-float MPU9250::MeasureGyroZOffsetFloat(void)
+float ICM20602::MeasureGyroZOffsetFloat(void)
 {
 	return (float)this->MeasureGyroZOffsetInt();
 }
 
 /*
-int32_t MPU9250::MeasureGyroZOffsetInt(void)
+int32_t ICM20602::MeasureGyroZOffsetInt(void)
 {
 	//uint8_t data[12]; // data array to hold accelerometer and gyro x, y, z, data
 	int32_t packet_count, fifo_count;

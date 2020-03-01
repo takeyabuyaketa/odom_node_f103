@@ -1,30 +1,33 @@
 /*
- * MPU9250.h
+ * ICM20602.h
  *
  *  Created on: Sep 17, 2017
  *      Author: yusaku
  */
 
-#ifndef INCLUDE_MPU9250_H_
-#define INCLUDE_MPU9250_H_
+#ifndef INCLUDE_ICM20602_H_
+#define INCLUDE_ICM20602_H_
 
 #include <stdint.h>
 #include "stm32f1xx_hal.h"
 
-// mpu9250 registers
-#define MPUREG_XG_OFFS_TC 0x00
-#define MPUREG_YG_OFFS_TC 0x01
-#define MPUREG_ZG_OFFS_TC 0x02
-#define MPUREG_X_FINE_GAIN 0x03
-#define MPUREG_Y_FINE_GAIN 0x04
-#define MPUREG_Z_FINE_GAIN 0x05
-#define MPUREG_XA_OFFS_H 0x06
-#define MPUREG_XA_OFFS_L 0x07
-#define MPUREG_YA_OFFS_H 0x08
-#define MPUREG_YA_OFFS_L 0x09
-#define MPUREG_ZA_OFFS_H 0x0A
-#define MPUREG_ZA_OFFS_L 0x0B
-#define MPUREG_PRODUCT_ID 0x0C
+// ICM20602 registers
+#define MPUREG_XG_OFFS_TC_H 0x04
+#define MPUREG_XG_OFFS_TC_L 0x05
+#define MPUREG_YG_OFFS_TC_H 0x07
+#define MPUREG_YG_OFFS_TC_L 0x08
+#define MPUREG_ZG_OFFS_TC_H 0x0A
+#define MPUREG_ZG_OFFS_TC_L 0x0B
+//#define MPUREG_X_FINE_GAIN 0x03
+//#define MPUREG_Y_FINE_GAIN 0x04
+//#define MPUREG_Z_FINE_GAIN 0x05
+//#define MPUREG_XA_OFFS_H 0x
+//#define MPUREG_XA_OFFS_L 0x07
+//#define MPUREG_YA_OFFS_H 0x08
+//#define MPUREG_YA_OFFS_L 0x09
+//#define MPUREG_ZA_OFFS_H 0x0A
+//#define MPUREG_ZA_OFFS_L 0x0B
+//#define MPUREG_PRODUCT_ID 0x0C
 #define MPUREG_SELF_TEST_X 0x0D
 #define MPUREG_SELF_TEST_Y 0x0E
 #define MPUREG_SELF_TEST_Z 0x0F
@@ -128,7 +131,7 @@
 #define MPUREG_ZA_OFFSET_H         0x7D
 #define MPUREG_ZA_OFFSET_L         0x7E
 
-// Configuration bits mpu9250
+// Configuration bits ICM20602
 #define BIT_SLEEP 0x40
 #define BIT_H_RESET 0x80
 #define BITS_CLKSEL 0x07
@@ -215,9 +218,9 @@ static constexpr int AccSensitivityScaleFactor = 2048;
 
 #endif
 
-class MPU9250 {
+class ICM20602 {
 public:
-	MPU9250(SPI_TypeDef * const spi, GPIO_TypeDef * const ss_gpio,
+	ICM20602(SPI_TypeDef * const spi, GPIO_TypeDef * const ss_gpio,
 			const uint32_t ss_pin);
 
 	uint8_t WriteByte(const uint8_t addr, const uint8_t data) const;
@@ -252,4 +255,4 @@ private:
 	inline void _spiChipDeselect() const;
 };
 
-#endif /* INCLUDE_MPU9250_H_ */
+#endif /* INCLUDE_ICM20602_H_ */

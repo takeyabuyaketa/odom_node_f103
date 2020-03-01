@@ -6,12 +6,12 @@
  */
 #pragma once
 
-#include "MPU9250.h"
+#include <ICM20602.h>
 #include <cmath>
 
-#define SPI_MPU9250  SPI2
-#define GPIO_MPU9250 GPIOB
-#define PIN_MPU9250  GPIO_PIN_12
+#define SPI_ICM20602  SPI2
+#define GPIO_ICM20602 GPIOB
+#define PIN_ICM20602  GPIO_PIN_12
 
 class Odometry
 {
@@ -20,7 +20,7 @@ private:
 	float y;
 	float yaw;
 
-	MPU9250 *mpu9250 = nullptr;
+	ICM20602 *icm20602 = nullptr;
 
 	// diameter of wheels in metre
 	static constexpr float WheelDiameter = 0.0508; //タイヤの直径によって変更

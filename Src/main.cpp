@@ -45,6 +45,7 @@
 #include "can.hpp"
 #include "led.h"
 #include <array>
+#include "MadgwickAHRS.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -59,6 +60,8 @@ CAN_HandleTypeDef hcan;
 CAN_TxHeaderTypeDef tx_header_x;
 CAN_TxHeaderTypeDef tx_header_y;
 CAN_TxHeaderTypeDef tx_header_yaw;
+
+extern Madgwick MDGF;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -184,7 +187,13 @@ int main(void) {
 
 	can_enable();
 
+	MDGF.setBeta(1.0f);
+
 	HAL_NVIC_EnableIRQ(TIM2_IRQn); //割り込み有効化 上のodom->Initializeが終わってからでないと、初期化終わる前にジャイロの値をとってしまう 初期の角度がズレる
+
+	HAL_Delay(1000);
+
+	MDGF.setBeta(0.12f);
 
 	CANtxinit();
 

@@ -136,8 +136,8 @@ void Odometry::ReadEncoder(void) {
 
 void Odometry::ReadAccGyro(void) {
 //	static constexpr int32_t sig = 1000;
-	static constexpr int32_t ang_movband = 120000;
-	static constexpr float ang_w = 0.01f; //追従の強さ
+	static constexpr int32_t ang_movband = 100000;
+	static constexpr float ang_w = 0.015f; //追従の強さ
 	static constexpr float acc_w = 0.01f;
 
 //	static uint32_t lasttime=0;
@@ -188,7 +188,7 @@ void Odometry::ReadAccGyro(void) {
 	}
 
 	MDGF.updateIMU(data[0], data[1], data[2], movavg[3]/1000000.0, movavg[4]/1000000.0, movavg[5]/1000000.0);
-//	MDGF.updateIMU(data[0], data[1], data[2],0,-1,0);
+//	MDGF.updateIMU(data[0], data[1], data[2],raw[3],raw[4],raw[5]);
 //	MDGF.updateIMU(0, 0, 0, 0, , movavg[5]);
 //	dt = HAL_GetTick()-lasttime;
 //	lasttime=HAL_GetTick();

@@ -45,6 +45,7 @@
 #include "can.hpp"
 #include "led.h"
 #include <array>
+#include "MadgwickAHRS.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -59,6 +60,8 @@ CAN_HandleTypeDef hcan;
 CAN_TxHeaderTypeDef tx_header_x;
 CAN_TxHeaderTypeDef tx_header_y;
 CAN_TxHeaderTypeDef tx_header_yaw;
+
+extern Madgwick MDGF;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -184,7 +187,13 @@ int main(void) {
 
 	can_enable();
 
+	MDGF.setBeta(1.0f);
+
 	HAL_NVIC_EnableIRQ(TIM2_IRQn); //割り込み有効化 上のodom->Initializeが終わってからでないと、初期化終わる前にジャイロの値をとってしまう 初期の角度がズレる
+
+	HAL_Delay(1000);
+
+	MDGF.setBeta(0.12f);
 
 	CANtxinit();
 
@@ -231,9 +240,13 @@ int main(void) {
 			can_tx(&tx_header_yaw, tx_payload_yaw);
 
 			// UART使ったデバッグ用に残しておく
-			char kakudo[12];
-			sprintf(kakudo, "%1.7f\n\r", Yaw);
-			HAL_UART_Transmit(&huart1, (uint8_t *) kakudo, 12, 1000);
+			char kakudo[20];
+			sprintf(kakudo, "%3.7f\n\r", Yaw);
+			HAL_UART_Transmit(&huart1, (uint8_t *) kakudo, sizeof(kakudo), 1000);
+
+//			char kakudo[20];
+//			sprintf(kakudo, "%1.7f\n\r", odom->movavg[3]/1000000.0);
+//			HAL_UART_Transmit(&huart1, (uint8_t *) kakudo, sizeof(kakudo), 1000);
 
 			last_time = HAL_GetTick();
 		}

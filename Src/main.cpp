@@ -154,6 +154,10 @@ int main(void) {
 	//CANの通信速度を設定する
 	can_set_bitrate(CAN_BITRATE_1000K);
 
+	HAL_Delay(1);
+
+	can_enable();
+
 //	GPIOC->BSRR = GPIO_BSRR_BS13;
 //
 //	GPIOB->BSRR = GPIO_BSRR_BS0 | GPIO_BSRR_BR1 | GPIO_BSRR_BR2; //この辺要らない　多分
@@ -181,8 +185,6 @@ int main(void) {
 			GPIOB->BSRR = GPIO_BSRR_BS9;
 		}
 	}
-
-	can_enable();
 
 	HAL_NVIC_EnableIRQ(TIM2_IRQn); //割り込み有効化 上のodom->Initializeが終わってからでないと、初期化終わる前にジャイロの値をとってしまう 初期の角度がズレる
 

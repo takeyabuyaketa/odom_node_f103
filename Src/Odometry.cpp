@@ -20,6 +20,8 @@ Odometry::Odometry(void) {
 	this->y = 0.0f;
 	this->yaw = 0.0f;
 
+	this->offset_yaw = 0.0f;
+
 	//this->mpu9250 = new MPU9250(SPI_MPU9250, GPIOC, GPIO_PIN_0);
 	this->mpu9250 = new MPU9250(SPI_MPU9250, GPIO_MPU9250, PIN_MPU9250);
 }
@@ -204,6 +206,10 @@ void Odometry::Sample(void) {
 	this->ReadAccGyro();
 }
 
+void Odometry::SetOffsetYaw(const float offset){
+	this->offset_yaw = offset;
+}
+
 void Odometry::SetPose(const float x, const float y, const float yaw) {
 	this->x = x;
 	this->y = y;
@@ -213,6 +219,6 @@ void Odometry::SetPose(const float x, const float y, const float yaw) {
 void Odometry::GetPose(float * const x, float * const y, float * const yaw) {
 	*x = this->x;
 	*y = this->y;
-	*yaw = this->yaw;
+	*yaw = this->yaw - this->offset_yaw;
 }
 

@@ -20,6 +20,8 @@ private:
 	float y;
 	float yaw;
 
+	float offset_yaw;
+
 	MPU9250 *mpu9250 = nullptr;
 
 	// diameter of wheels in metre
@@ -52,6 +54,7 @@ public:
 	void SetPose(float x, float y, float yaw);
 	void GetPose(float *x, float *y, float *yaw);
 
+	void SetOffsetYaw(const float offset);
 	static constexpr int32_t SamplingFrequency = 1000; //TIM2の割り込み周波数と一致
 	//正直madgwickfilterがそんなに周波数出るかわからん
 };

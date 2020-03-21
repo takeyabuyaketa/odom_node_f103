@@ -45,6 +45,7 @@
 #include "can.hpp"
 #include "led.h"
 #include <array>
+#include "MadgwickAHRS.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -59,6 +60,8 @@ CAN_HandleTypeDef hcan;
 CAN_TxHeaderTypeDef tx_header_x;
 CAN_TxHeaderTypeDef tx_header_y;
 CAN_TxHeaderTypeDef tx_header_yaw;
+
+extern Madgwick MDGF;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -85,6 +88,11 @@ uint8_t tx_payload_yaw[CAN_MTU];
 static constexpr uint32_t CAN_Freq = 200;
 static constexpr uint16_t CAN_duration = 1000 / CAN_Freq;
 /* USER CODE END PV */
+
+static float X;
+static float Y;
+static float Yaw;
+static uint32_t last_time = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -153,6 +161,8 @@ int main(void) {
 
 	//CANの通信速度を設定する
 	can_set_bitrate(CAN_BITRATE_1000K);
+	HAL_Delay(1);
+	can_enable();
 
 	HAL_Delay(1);
 
@@ -186,14 +196,21 @@ int main(void) {
 		}
 	}
 
+	MDGF.setBeta(1.0f);
+
 	HAL_NVIC_EnableIRQ(TIM2_IRQn); //割り込み有効化 上のodom->Initializeが終わってからでないと、初期化終わる前にジャイロの値をとってしまう 初期の角度がズレる
 
-	CANtxinit();
+	last_time = HAL_GetTick();
+	while (HAL_GetTick() - last_time <= 1000){
+		asm("NOP");
+	}
 
-	static float X;
-	static float Y;
-	static float Yaw;
-	uint32_t last_time = 0;
+	odom->GetPose(&X, &Y, &Yaw);
+	odom->SetOffsetYaw(Yaw);
+
+	MDGF.setBeta(0.12f);
+
+	CANtxinit();
 
 	/* USER CODE END 2 */
 
@@ -233,9 +250,13 @@ int main(void) {
 			can_tx(&tx_header_yaw, tx_payload_yaw);
 
 			// UART使ったデバッグ用に残しておく
-			char kakudo[12];
-			sprintf(kakudo, "%1.7f\n\r", Yaw);
-			HAL_UART_Transmit(&huart1, (uint8_t *) kakudo, 12, 1000);
+			char kakudo[20];
+			sprintf(kakudo, "%3.7f\n\r", Yaw);
+			HAL_UART_Transmit(&huart1, (uint8_t *) kakudo, sizeof(kakudo), 1000);
+
+//			char kakudo[20];
+//			sprintf(kakudo, "%1.7f\n\r", odom->movavg[3]/1000000.0);
+//			HAL_UART_Transmit(&huart1, (uint8_t *) kakudo, sizeof(kakudo), 1000);
 
 			last_time = HAL_GetTick();
 		}

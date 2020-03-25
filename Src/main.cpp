@@ -250,12 +250,8 @@ int main(void) {
 			can_tx(&tx_header_yaw, tx_payload_yaw);
 
 			// UART使ったデバッグ用に残しておく
-			char kakudo[20];
-			sprintf(kakudo, "%3.7f\n\r", Yaw);
-			HAL_UART_Transmit(&huart1, (uint8_t *) kakudo, sizeof(kakudo), 1000);
-
 //			char kakudo[20];
-//			sprintf(kakudo, "%1.7f\n\r", odom->movavg[3]/1000000.0);
+//			sprintf(kakudo, "%3.7f\n\r", Yaw);
 //			HAL_UART_Transmit(&huart1, (uint8_t *) kakudo, sizeof(kakudo), 1000);
 
 			last_time = HAL_GetTick();

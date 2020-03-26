@@ -123,7 +123,7 @@ void Odometry::ReadEncoder(void) {
 	volatile int16_t _p1 = (-1) * static_cast<int16_t>(TIM3->CNT);
 	TIM3->CNT = 0;
 
-	volatile int16_t _p2 = (-1) * static_cast<int16_t>(TIM4->CNT);
+	volatile int16_t _p2 = static_cast<int16_t>(TIM4->CNT);
 	TIM4->CNT = 0;
 
 	// just a simple rotation matrix
@@ -190,10 +190,6 @@ void Odometry::ReadAccGyro(void) {
 	}
 
 	MDGF.updateIMU(data[0], data[1], data[2], movavg[3]/1000000.0, movavg[4]/1000000.0, movavg[5]/1000000.0);
-//	MDGF.updateIMU(data[0], data[1], data[2],raw[3],raw[4],raw[5]);
-//	MDGF.updateIMU(0, 0, 0, 0, , movavg[5]);
-//	dt = HAL_GetTick()-lasttime;
-//	lasttime=HAL_GetTick();
 	this->yaw = MDGF.getYawRadians();
 }
 

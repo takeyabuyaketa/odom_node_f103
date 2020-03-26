@@ -164,32 +164,12 @@ int main(void) {
 	HAL_Delay(1);
 	can_enable();
 
-//	GPIOC->BSRR = GPIO_BSRR_BS13;
-//
-//	GPIOB->BSRR = GPIO_BSRR_BS0 | GPIO_BSRR_BR1 | GPIO_BSRR_BR2; //この辺要らない　多分
-//	HAL_Delay(250);
-//	GPIOB->BSRR = GPIO_BSRR_BS0 | GPIO_BSRR_BS1 | GPIO_BSRR_BR2;
-//	HAL_Delay(250);
-//	GPIOB->BSRR = GPIO_BSRR_BS0 | GPIO_BSRR_BS1 | GPIO_BSRR_BS2;
-//	HAL_Delay(250);
-//	GPIOB->BSRR = GPIO_BSRR_BR0 | GPIO_BSRR_BR1 | GPIO_BSRR_BR2;
-//	HAL_Delay(250);
-//	GPIOB->BSRR = GPIO_BSRR_BS0 | GPIO_BSRR_BS1 | GPIO_BSRR_BS2;
-//	HAL_Delay(250);
-//	GPIOB->BSRR = GPIO_BSRR_BR0 | GPIO_BSRR_BR1 | GPIO_BSRR_BR2;
-//	HAL_Delay(250);
-//
-//	GPIOC->BSRR = GPIO_BSRR_BR13;
-//	GPIOB->BSRR = GPIO_BSRR_BS0 | GPIO_BSRR_BR1 | GPIO_BSRR_BR2;
+	HAL_Delay(1);
 
-	bool r = odom->Initialize(); //ジャイロの初期化に失敗するとループに入る
-	if (!r) {
-		while (1) {
-			HAL_Delay(100);
-			GPIOB->BSRR = GPIO_BSRR_BR9;
-			HAL_Delay(100);
-			GPIOB->BSRR = GPIO_BSRR_BS9;
-		}
+	can_enable();
+
+	while(!(odom->Initialize())) {
+		HAL_Delay(10);
 	}
 
 	MDGF.setBeta(1.0f);
@@ -197,7 +177,7 @@ int main(void) {
 	HAL_NVIC_EnableIRQ(TIM2_IRQn); //割り込み有効化 上のodom->Initializeが終わってからでないと、初期化終わる前にジャイロの値をとってしまう 初期の角度がズレる
 
 	last_time = HAL_GetTick();
-	while (HAL_GetTick() - last_time <= 1000){
+	while (HAL_GetTick() - last_time <= 1000){ //フィルターの上での初期姿勢{0,0,1G}が実際の姿勢に収束するまでの待ち時間
 		asm("NOP");
 	}
 
@@ -246,12 +226,8 @@ int main(void) {
 			can_tx(&tx_header_yaw, tx_payload_yaw);
 
 			// UART使ったデバッグ用に残しておく
-			char kakudo[20];
-			sprintf(kakudo, "%3.7f\n\r", Yaw);
-			HAL_UART_Transmit(&huart1, (uint8_t *) kakudo, sizeof(kakudo), 1000);
-
 //			char kakudo[20];
-//			sprintf(kakudo, "%1.7f\n\r", odom->movavg[3]/1000000.0);
+//			sprintf(kakudo, "%3.7f\n\r", Yaw);
 //			HAL_UART_Transmit(&huart1, (uint8_t *) kakudo, sizeof(kakudo), 1000);
 
 			last_time = HAL_GetTick();

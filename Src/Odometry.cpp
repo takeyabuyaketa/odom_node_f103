@@ -189,7 +189,13 @@ void Odometry::ReadAccGyro(void) {
 		movavg[i] = (int) (roundf((movavg[i] * (1.0 - acc_w)) + (raw[i] * acc_w)));
 	}
 
+#ifdef FOR_PR
+	MDGF.updateIMU(data[1], data[2], data[0], movavg[4]/1000000.0, movavg[5]/1000000.0, movavg[3]/1000000.0);
+#endif
+
+#ifdef FOR_TR
 	MDGF.updateIMU(data[0], data[1], data[2], movavg[3]/1000000.0, movavg[4]/1000000.0, movavg[5]/1000000.0);
+#endif
 	this->yaw = MDGF.getYawRadians();
 }
 

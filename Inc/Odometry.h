@@ -13,6 +13,19 @@
 #define GPIO_MPU9250 GPIOB
 #define PIN_MPU9250  GPIO_PIN_12
 
+#undef FOR_PR
+#undef FOR_TR
+
+//#define FOR_PR
+#define FOR_TR
+
+#if (defined(FOR_PR) && defined(FOR_TR))
+#error "Cannot compile with both FOR_TR and FOR_PR set."
+#endif
+#if !(defined(FOR_PR) || defined(FOR_TR))
+#error "Cannot compile with both FOR_TR and FOR_PR are not set."
+#endif
+
 class Odometry
 {
 private:

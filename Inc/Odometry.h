@@ -16,8 +16,8 @@
 #undef FOR_PR
 #undef FOR_TR
 
-//#define FOR_PR
-#define FOR_TR
+#define FOR_PR
+//#define FOR_TR
 
 #if (defined(FOR_PR) && defined(FOR_TR))
 #error "Cannot compile with both FOR_TR and FOR_PR set."

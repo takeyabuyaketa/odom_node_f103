@@ -120,7 +120,7 @@ bool Odometry::InitGyro(void) {
 }
 
 void Odometry::ReadEncoder(void) {
-	volatile int16_t _p1 = (-1) * static_cast<int16_t>(TIM3->CNT);
+	volatile int16_t _p1 = static_cast<int16_t>(TIM3->CNT);
 	TIM3->CNT = 0;
 
 	volatile int16_t _p2 = static_cast<int16_t>(TIM4->CNT);

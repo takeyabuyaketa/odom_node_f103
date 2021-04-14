@@ -15,7 +15,7 @@ void led_on(void)
 	// This prevents a solid status LED on a busy canbus
 	if(led_laston == 0 && HAL_GetTick() - led_lastoff > LED_DURATION)
 	{
-	    GPIOC->BSRR = GPIO_BSRR_BS13;
+	    GPIOC->BSRR = GPIO_BSRR_BS14; //13->14
 		led_laston = HAL_GetTick();
 	}
 }
@@ -27,7 +27,7 @@ void led_process(void)
 	// If LED has been on for long enough, turn it off
 	if(led_laston > 0 && HAL_GetTick() - led_laston > LED_DURATION)
 	{
-        GPIOC->BSRR = GPIO_BSRR_BR13;
+        GPIOC->BSRR = GPIO_BSRR_BR14; //13->14
 		led_laston = 0;
 		led_lastoff = HAL_GetTick();
 	}
